@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import './App.css';
 import CharacterCard from './CharacterCard';
 import _ from 'lodash';
+
 const prepareStateFromWord = (given_word) => {
     let word = given_word.toUpperCase()
     let chars = _.shuffle(Array.from(word))
@@ -12,12 +14,25 @@ const prepareStateFromWord = (given_word) => {
         completed: false
     }
 }
-export default class WordCard extends Component {
+
+
+export default class WordCard extends
+    Component {
     constructor(props) {
         super(props);
         this.state = {
             attempt: '',
         }
+    }
+    componentWillMount() {
+        let data = prepareStateFromWord(this.props.value);
+        this.setState({
+            word: data.word,
+            chars: data.chars,
+            attempt: data.attempt,
+            guess: data.guess,
+            completed: data.completed,
+        })
     }
     activationHandler = (c) => {
         let guess = [...this.state.guess, c]
@@ -31,10 +46,13 @@ export default class WordCard extends Component {
         }
     }
     render() {
+        console.log(this.state);
         return (
             <div>
-                {Array.from(this.props.value).map((c, i) => <CharacterCard value={c} key={i} attempt={this.state.attempt}
-                    activationHandler={this.activationHandler} />)}
+                {
+                    this.state.chars.map((c, i) => <CharacterCard value={c} key={i} attempt={this.state.attempt}
+                        activationHandler={this.activationHandler} />)
+                }
             </div>
         );
     }
